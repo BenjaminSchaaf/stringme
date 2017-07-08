@@ -1,12 +1,12 @@
 extends layout.dt
 
 block head
-    title stringme.tf
+    title stringme.io
 
 block content
     .col-sm-6.col-sm-offset-3
         .text-center
-            h1 stringme.tf
+            h1 stringme.io
             h5 by #[a(href="https://warzone.ozfortress.com/users/2") /dev/zero]
 
         .
