@@ -1,0 +1,70 @@
+extends layout.dt
+
+block head
+    title stringme.tf
+
+block content
+    .col-sm-6.col-sm-offset-3
+        .text-center
+            h1 stringme.tf
+            h5 by #[a(href="https://warzone.ozfortress.com/users/2") /dev/zero]
+
+        .
+            Simply paste your #[b connect string] or the #[b server details] and
+            we will fetch the connect string to your server.
+
+        hr
+
+        form(method="post", action="/")
+            - string stringValue, addressValue, rconPasswordValue;
+
+            - if ("string" in req.form) stringValue = req.form["string"];
+            - if ("address" in req.form) addressValue = req.form["address"];
+            - if ("rcon_password" in req.form) rconPasswordValue = req.form["rcon_password"];
+
+            //- Connect String field with error display
+            - string stringError;
+            - if ("string" in errors) stringError = errors["string"];
+            - auto stringClass = "form-group" ~ (stringError is null ? "" : " has-feedback has-error");
+            div(class=stringClass)
+                input.form-control(type="text", name="string", placeholder="Connect String", value=stringValue)
+                - if (stringError !is null)
+                    small.form-text.text-danger= stringError
+                    .glyphicon.glyphicon-remove.form-control-feedback
+
+            .text-center
+                h5 OR
+
+            //- Address field with error display
+            - string addressError;
+            - if ("address" in errors) addressError = errors["address"];
+            - auto addressClass = "form-group" ~ (addressError is null ? "" : " has-feedback has-error");
+            div(class=addressClass)
+                input.form-control(type="text", name="address", placeholder="Address", value=addressValue)
+                - if (addressError !is null)
+                    small.form-text.text-danger= addressError
+                    .glyphicon.glyphicon-remove.form-control-feedback
+
+            //- RCon Password field with error display
+            - string rconPasswordError;
+            - if ("rconPassword" in errors) rconPasswordError = errors["rconPassword"];
+            - auto rconPasswordClass = "form-group" ~ (rconPasswordError is null ? "" : " has-feedback has-error");
+            div(class=rconPasswordClass)
+                input.form-control(type="text", name="rcon_password", placeholder="RCon Password", value=rconPasswordValue)
+                - if (rconPasswordError !is null)
+                    small.form-text.text-danger= rconPasswordError
+                    .glyphicon.glyphicon-remove.form-control-feedback
+
+            .text-center
+                button.btn.btn-default(type="submit", value="Submit") String Me!
+
+        - if ("base" in errors)
+            hr
+            .alert.alert-danger
+                strong Error!
+                = errors["base"]
+        - else if (connectString.address != "")
+            hr
+            .alert.alert-info
+                p Connect String: #[pre= connectString.toString()]
+                p Password: #[pre= connectString.password]

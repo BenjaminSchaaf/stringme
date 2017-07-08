@@ -1,0 +1,9 @@
+name "stringme"
+description "A minimal D application."
+authors "Benjamin Schaaf"
+copyright "Copyright © 2017, Benjamin Schaaf"
+license "GPLv3"
+
+dependency "vibe-d" version="~>0.7"
+
+versions "VibeDefaultMain"
