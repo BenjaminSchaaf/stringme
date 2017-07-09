@@ -6,9 +6,6 @@ __dummy.html
 *.obj
 __test__*__
 
-# Builds
-stringme
-stringme-test-library
-
-# Logs
+# Dirs
+bin/
 logs/
