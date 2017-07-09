@@ -7,3 +7,6 @@ license "GPLv3"
 dependency "vibe-d" version="~>0.7"
 
 versions "VibeDefaultMain"
+
+preBuildCommands "mkdir -p bin"
+targetName "bin/stringme"
