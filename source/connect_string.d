@@ -1,9 +1,10 @@
-module stringme;
+module connect_string;
 
 import std.conv;
 import std.algorithm;
 
 import vibe.d;
+import vibe.rcon;
 
 const READ_TIMEOUT = 2.dur!"seconds";
 
@@ -41,12 +42,12 @@ struct ConnectString {
         return str;
     }
 
-    TCPConnection connectRCon() {
+    RCONClient connectRCon() {
         auto splits = address.split(":");
 
         auto connection = connectTCP(splits[0], splits[1].to!ushort);
         connection.readTimeout = READ_TIMEOUT;
-        return connection;
+        return new RCONClient(connection);
     }
 
     void validate(ref string[string] errors) {

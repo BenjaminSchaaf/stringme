@@ -5,11 +5,9 @@ import std.array;
 import std.algorithm;
 
 import vibe.d;
+import vibe.rcon;
 
-import rcon.auth;
-import rcon.util;
-
-import stringme;
+import connect_string;
 
 const CONFIG_FILE = "config/application.json";
 const LOG_FILE = "logs/error.log";
@@ -21,6 +19,7 @@ shared static this() {
     auto settings = readSettings();
 
     settings.accessLogFile = ACCESS_FILE;
+    settings.options |= HTTPServerOption.distribute;
 
     auto fileLogger = cast(shared)new FileLogger(LOG_FILE);
     fileLogger.minLevel = LogLevel.info;
@@ -98,22 +97,22 @@ void getPassword(HTTPServerRequest req, HTTPServerResponse res) {
 
     // Get sv_password
     if (errors.keys.length == 0) {
-        TCPConnection connection;
+        RCONClient client;
 
         try {
-            connection = connectString.connectRCon();
+            client = connectString.connectRCon();
         } catch (Exception e) {
             errors["base"] = "Failed to connect to server";
         }
 
-        if (connection !is null) {
-            scope (exit) connection.close();
+        if (client !is null) {
+            scope (exit) client.close();
 
             try {
-                if (!authenticate(connection, connectString.rconPassword)) {
+                if (!client.authenticate(connectString.rconPassword)) {
                     errors["base"] = "Failed to authenticate with rcon";
                 } else {
-                    connectString.password = readCVar(connection, "sv_password");
+                    connectString.password = client.readConVar("sv_password");
                 }
             } catch (Exception e) {
                 errors["base"] = "Connection error";
